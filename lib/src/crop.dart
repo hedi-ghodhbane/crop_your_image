@@ -390,7 +390,7 @@ class _CropEditorState extends State<_CropEditor> {
       _resizeWith(widget.aspectRatio, widget.initialArea);
     }
 
-    if (widget.interactive) {
+    if (widget.interactive && widget.fit == null) {
       final initialScale = calculator.scaleToCover(screenSize, _imageRect);
       _applyScale(initialScale);
     }
@@ -475,10 +475,8 @@ class _CropEditorState extends State<_CropEditor> {
                             widget.image,
                             width: _isFitVertically
                                 ? null
-                                : widget.fit == null
-                                    ? MediaQuery.of(context).size.width * _scale
-                                    : null,
-                            height: _isFitVertically && widget.fit != null
+                                : MediaQuery.of(context).size.width * _scale,
+                            height: _isFitVertically
                                 ? MediaQuery.of(context).size.height * _scale
                                 : null,
                             fit: widget.fit ?? BoxFit.contain,
