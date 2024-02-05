@@ -14,6 +14,8 @@ class Crop extends StatelessWidget {
   /// original image data
   final Uint8List image;
 
+  final BoxFit? fit;
+
   /// callback when cropping completed
   final ValueChanged<Uint8List> onCropped;
 
@@ -100,6 +102,7 @@ class Crop extends StatelessWidget {
     this.withCircleUi = false,
     this.controller,
     this.onMoved,
+    this.fit,
     this.onStatusChanged,
     this.maskColor,
     this.baseColor = Colors.white,
@@ -130,6 +133,7 @@ class Crop extends StatelessWidget {
             initialArea: initialArea,
             withCircleUi: withCircleUi,
             controller: controller,
+            fit: fit,
             onMoved: onMoved,
             onStatusChanged: onStatusChanged,
             maskColor: maskColor,
@@ -153,6 +157,7 @@ class _CropEditor extends StatefulWidget {
   final double? initialSize;
   final CroppingAreaBuilder? initialAreaBuilder;
   final Rect? initialArea;
+  final BoxFit? fit;
   final bool withCircleUi;
   final CropController? controller;
   final ValueChanged<Rect>? onMoved;
@@ -170,6 +175,7 @@ class _CropEditor extends StatefulWidget {
     required this.image,
     required this.onCropped,
     this.aspectRatio,
+    this.fit,
     this.initialSize,
     this.initialAreaBuilder,
     this.initialArea,
@@ -469,11 +475,13 @@ class _CropEditorState extends State<_CropEditor> {
                             widget.image,
                             width: _isFitVertically
                                 ? null
-                                : MediaQuery.of(context).size.width * _scale,
-                            height: _isFitVertically
+                                : widget.fit == null
+                                    ? MediaQuery.of(context).size.width * _scale
+                                    : null,
+                            height: _isFitVertically && widget.fit != null
                                 ? MediaQuery.of(context).size.height * _scale
                                 : null,
-                            fit: BoxFit.contain,
+                            fit: widget.fit ?? BoxFit.contain,
                           ),
                         ),
                       ],
